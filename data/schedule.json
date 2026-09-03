@@ -1,0 +1,923 @@
+{
+  "meta": {
+    "weekendRotation": [
+      "영기",
+      "소강",
+      "도강"
+    ],
+    "source": "26년 당직 일정_정리.xlsx",
+    "updatedAt": "2026-09-03T07:27:45.342018"
+  },
+  "weekendDuty": [
+    {
+      "date": "2026-09-05",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "영기",
+      "person": "배병모",
+      "note": ""
+    },
+    {
+      "date": "2026-09-12",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "소강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-09-19",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "도강",
+      "person": "최진필",
+      "note": "(추가)권순욱"
+    },
+    {
+      "date": "2026-09-24",
+      "weekday": "목",
+      "type": "휴일",
+      "org": "영기",
+      "person": "황성용",
+      "note": "명절연휴"
+    },
+    {
+      "date": "2026-09-25",
+      "weekday": "금",
+      "type": "휴일",
+      "org": "전산휴무",
+      "person": "",
+      "note": "명절연휴"
+    },
+    {
+      "date": "2026-09-26",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "전산휴무",
+      "person": "",
+      "note": "명절연휴"
+    },
+    {
+      "date": "2026-10-03",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "소강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-10-05",
+      "weekday": "월",
+      "type": "휴일",
+      "org": "도강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-10-09",
+      "weekday": "금",
+      "type": "휴일",
+      "org": "영기",
+      "person": "임나현",
+      "note": ""
+    },
+    {
+      "date": "2026-10-10",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "소강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-10-17",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "도강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-10-24",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "영기",
+      "person": "최명일",
+      "note": ""
+    },
+    {
+      "date": "2026-10-31",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "소강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-11-07",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "도강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-11-14",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "영기",
+      "person": "한현구",
+      "note": ""
+    },
+    {
+      "date": "2026-11-21",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "소강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-11-28",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "도강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-12-05",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "영기",
+      "person": "최동연",
+      "note": ""
+    },
+    {
+      "date": "2026-12-12",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "소강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-12-19",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "도강",
+      "person": "",
+      "note": ""
+    },
+    {
+      "date": "2026-12-25",
+      "weekday": "금",
+      "type": "휴일",
+      "org": "영기",
+      "person": "배병모",
+      "note": ""
+    },
+    {
+      "date": "2026-12-26",
+      "weekday": "토",
+      "type": "휴일",
+      "org": "소강",
+      "person": "",
+      "note": ""
+    }
+  ],
+  "weekdayDuty": [
+    {
+      "date": "2026-09-01",
+      "weekday": "화",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-09-02",
+      "weekday": "수",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-09-03",
+      "weekday": "목",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-09-04",
+      "weekday": "금",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-09-05",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-06",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-07",
+      "weekday": "월",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-09-08",
+      "weekday": "화",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-09-09",
+      "weekday": "수",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-09-10",
+      "weekday": "목",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-09-11",
+      "weekday": "금",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-09-12",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-13",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-14",
+      "weekday": "월",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-09-15",
+      "weekday": "화",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-09-16",
+      "weekday": "수",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-09-17",
+      "weekday": "목",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-09-18",
+      "weekday": "금",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-09-19",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-20",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-21",
+      "weekday": "월",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-09-22",
+      "weekday": "화",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-09-23",
+      "weekday": "수",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-09-24",
+      "weekday": "목",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-25",
+      "weekday": "금",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-26",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-27",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-09-28",
+      "weekday": "월",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-09-29",
+      "weekday": "화",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-09-30",
+      "weekday": "수",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-10-01",
+      "weekday": "목",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-10-02",
+      "weekday": "금",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-10-03",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-04",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-05",
+      "weekday": "월",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-06",
+      "weekday": "화",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-10-07",
+      "weekday": "수",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-10-08",
+      "weekday": "목",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-10-09",
+      "weekday": "금",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-10",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-11",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-12",
+      "weekday": "월",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-10-13",
+      "weekday": "화",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-10-14",
+      "weekday": "수",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-10-15",
+      "weekday": "목",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-10-16",
+      "weekday": "금",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-10-17",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-18",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-19",
+      "weekday": "월",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-10-20",
+      "weekday": "화",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-10-21",
+      "weekday": "수",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-10-22",
+      "weekday": "목",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-10-23",
+      "weekday": "금",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-10-24",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-25",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-10-26",
+      "weekday": "월",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-10-27",
+      "weekday": "화",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-10-28",
+      "weekday": "수",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-10-29",
+      "weekday": "목",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-10-30",
+      "weekday": "금",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-10-31",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-01",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-02",
+      "weekday": "월",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-11-03",
+      "weekday": "화",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-11-04",
+      "weekday": "수",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-11-05",
+      "weekday": "목",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-11-06",
+      "weekday": "금",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-11-07",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-08",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-09",
+      "weekday": "월",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-11-10",
+      "weekday": "화",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-11-11",
+      "weekday": "수",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-11-12",
+      "weekday": "목",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-11-13",
+      "weekday": "금",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-11-14",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-15",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-16",
+      "weekday": "월",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-11-17",
+      "weekday": "화",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-11-18",
+      "weekday": "수",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-11-19",
+      "weekday": "목",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-11-20",
+      "weekday": "금",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-11-21",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-22",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-23",
+      "weekday": "월",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-11-24",
+      "weekday": "화",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-11-25",
+      "weekday": "수",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-11-26",
+      "weekday": "목",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-11-27",
+      "weekday": "금",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-11-28",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-29",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-11-30",
+      "weekday": "월",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-12-01",
+      "weekday": "화",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-12-02",
+      "weekday": "수",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-12-03",
+      "weekday": "목",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-12-04",
+      "weekday": "금",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-12-05",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-06",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-07",
+      "weekday": "월",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-12-08",
+      "weekday": "화",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-12-09",
+      "weekday": "수",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-12-10",
+      "weekday": "목",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-12-11",
+      "weekday": "금",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-12-12",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-13",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-14",
+      "weekday": "월",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-12-15",
+      "weekday": "화",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-12-16",
+      "weekday": "수",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-12-17",
+      "weekday": "목",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-12-18",
+      "weekday": "금",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-12-19",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-20",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-21",
+      "weekday": "월",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-12-22",
+      "weekday": "화",
+      "type": "평일",
+      "person": "권순욱"
+    },
+    {
+      "date": "2026-12-23",
+      "weekday": "수",
+      "type": "평일",
+      "person": "황성용"
+    },
+    {
+      "date": "2026-12-24",
+      "weekday": "목",
+      "type": "평일",
+      "person": "임나현"
+    },
+    {
+      "date": "2026-12-25",
+      "weekday": "금",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-26",
+      "weekday": "토",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-27",
+      "weekday": "일",
+      "type": "휴일",
+      "person": ""
+    },
+    {
+      "date": "2026-12-28",
+      "weekday": "월",
+      "type": "평일",
+      "person": "한현구"
+    },
+    {
+      "date": "2026-12-29",
+      "weekday": "화",
+      "type": "평일",
+      "person": "최동연"
+    },
+    {
+      "date": "2026-12-30",
+      "weekday": "수",
+      "type": "평일",
+      "person": "배병모"
+    },
+    {
+      "date": "2026-12-31",
+      "weekday": "목",
+      "type": "평일",
+      "person": "권순욱"
+    }
+  ]
+}
