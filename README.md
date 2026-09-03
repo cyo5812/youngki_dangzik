@@ -30,10 +30,10 @@ scripts/extract_xlsx.py   원본 엑셀 -> data/schedule.json 변환 스크립�
 
 ## GitHub Pages로 배포하기
 
-1. 이 저장소를 GitHub에 push 합니다.
-2. 저장소 **Settings → Pages** 에서 Source를 "Deploy from a branch"로 두고,
-   배포할 브랜치(예: `main`)와 폴더는 `/ (root)`로 선택합니다.
-3. 잠시 후 `https://<owner>.github.io/<repo>/` 로 접속하면 캘린더가 보입니다.
+`main` 브랜치에 push될 때마다 `.github/workflows/deploy-pages.yml` 워크플로가
+자동으로 GitHub Pages에 배포합니다 (별도 설정 없이 첫 실행 시 Pages가 자동으로
+활성화됩니다). 배포가 끝나면 `https://<owner>.github.io/<repo>/` 로 접속하면
+캘린더가 보입니다. 저장소 **Actions** 탭에서 배포 진행 상황을 확인할 수 있습니다.
 
 ## 보는 방법
 
