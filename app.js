@@ -128,7 +128,61 @@ function renderCalendar() {
     cal.appendChild(cell);
   }
 
+  renderMobileCalendar();
   renderUpcoming();
+}
+
+function renderMobileCalendar() {
+  const mobileCal = $("#mobile-calendar");
+  if (!mobileCal) return;
+  mobileCal.innerHTML = "";
+
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const today = todayStr();
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const cellDate = new Date(viewYear, viewMonth, day);
+    const dateStr = `${cellDate.getFullYear()}-${pad(cellDate.getMonth() + 1)}-${pad(cellDate.getDate())}`;
+    const dowIndex = cellDate.getDay();
+    const we = weekendByDate.get(dateStr);
+    const wd = weekdayByDate.get(dateStr);
+
+    const row = document.createElement("div");
+    row.className = "mobile-day" + (dateStr === today ? " is-today" : "") + (editMode ? " editable" : "");
+    if (editMode) row.addEventListener("click", () => openDayModal(dateStr));
+
+    const date = document.createElement("div");
+    date.className = "mobile-date" + (dowIndex === 0 ? " sun" : dowIndex === 6 ? " sat" : "");
+    date.innerHTML = `<strong>${day}</strong><span>${DOW_LABELS[dowIndex]}</span>`;
+
+    const duty = document.createElement("div");
+    duty.className = "mobile-duty";
+    if (we && we.org) {
+      const tag = document.createElement("div");
+      tag.className = "cal-tag org-" + we.org;
+      tag.textContent = we.org + (we.org === "영기" && we.person ? ` · ${we.person}` : "");
+      duty.appendChild(tag);
+      if (we.note) {
+        const note = document.createElement("div");
+        note.className = "cal-note";
+        note.textContent = we.note;
+        duty.appendChild(note);
+      }
+    } else if (wd && wd.type === "평일" && wd.person) {
+      const tag = document.createElement("div");
+      tag.className = "cal-tag weekday-person";
+      tag.textContent = `평일 · ${wd.person}`;
+      duty.appendChild(tag);
+    } else {
+      const empty = document.createElement("span");
+      empty.className = "mobile-empty";
+      empty.textContent = "일정 없음";
+      duty.appendChild(empty);
+    }
+
+    row.append(date, duty);
+    mobileCal.appendChild(row);
+  }
 }
 
 function renderUpcoming() {

@@ -1,136 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>영기팀 당직 일정표</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#172554">
+  <meta name="description" content="영기팀의 월별 당직 일정과 다가오는 당직을 확인하는 일정표입니다.">
+  <title>영기팀 당직 일정</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="topbar">
-  <h1>영기팀 당직 일정표</h1>
-  <div class="topbar-actions">
-    <span id="dirty-badge" class="dirty-badge" hidden>저장되지 않은 변경사항</span>
-    <button id="btn-edit-toggle" class="btn btn-outline">수정 모드</button>
-    <button id="btn-save" class="btn btn-primary" hidden>GitHub에 저장</button>
-    <button id="btn-settings" class="btn btn-icon" title="GitHub 연결 설정">⚙</button>
-  </div>
-</header>
+  <header class="site-header">
+    <div class="shell topbar">
+      <div class="brand">
+        <p class="eyebrow">YOUNGKI TEAM · DUTY SCHEDULE</p>
+        <h1>영기팀 당직 일정</h1>
+        <p class="brand-description">당직 현황을 한눈에 확인하고 필요한 일정을 간편하게 관리하세요.</p>
+      </div>
+      <div class="topbar-actions">
+        <span id="dirty-badge" class="dirty-badge" hidden>저장 전 변경사항</span>
+        <button id="btn-edit-toggle" class="btn btn-outline">수정 모드</button>
+        <button id="btn-save" class="btn btn-primary" hidden>변경사항 저장</button>
+        <button id="btn-settings" class="btn btn-icon" title="GitHub 연결 설정" aria-label="GitHub 연결 설정">⚙</button>
+      </div>
+    </div>
+  </header>
 
-<section class="legend">
-  <span class="chip org-영기">영기</span>
-  <span class="chip org-소강">소강</span>
-  <span class="chip org-도강">도강</span>
-  <span class="chip org-전산휴무">전산휴무</span>
-  <span class="legend-sep">|</span>
-  <span class="legend-note">토요일/휴일 = 3팀(영기·소강·도강) 순환 당직 · 평일 = 영기팀 개별 당직</span>
-</section>
+  <main class="shell page-content">
+    <section class="schedule-intro" aria-label="당직표 안내">
+      <div>
+        <p class="section-kicker">MONTHLY OVERVIEW</p>
+        <h2>이번 달 당직을 확인하세요</h2>
+      </div>
+      <p>토요일과 휴일은 영기·소강·도강 순환 당직이며, 평일은 영기팀 개별 당직으로 운영됩니다.</p>
+    </section>
 
-<nav class="month-nav">
-  <button id="btn-prev" class="btn btn-outline">‹ 이전달</button>
-  <div id="month-label" class="month-label">-</div>
-  <button id="btn-next" class="btn btn-outline">다음달 ›</button>
-  <button id="btn-today" class="btn btn-outline">이번달</button>
-</nav>
+    <section class="legend" aria-label="당직 구분 안내">
+      <div class="legend-groups">
+        <span class="chip org-영기"><i></i>영기</span>
+        <span class="chip org-소강"><i></i>소강</span>
+        <span class="chip org-도강"><i></i>도강</span>
+        <span class="chip org-전산휴무"><i></i>전산휴무</span>
+      </div>
+      <span class="legend-note">색상으로 당직 조직과 휴무 일정을 구분합니다.</span>
+    </section>
 
-<main>
-  <div id="calendar" class="calendar"></div>
-</main>
+    <section class="calendar-panel" aria-label="월간 당직 일정">
+      <div class="calendar-panel-header">
+        <div>
+          <p class="section-kicker">DUTY CALENDAR</p>
+          <h2 id="month-label" class="month-label">-</h2>
+        </div>
+        <nav class="month-nav" aria-label="월 선택">
+          <button id="btn-prev" class="btn btn-outline nav-button"><span aria-hidden="true">←</span> 이전</button>
+          <button id="btn-today" class="btn btn-quiet">이번 달</button>
+          <button id="btn-next" class="btn btn-outline nav-button">다음 <span aria-hidden="true">→</span></button>
+        </nav>
+      </div>
+      <div id="calendar" class="calendar"></div>
+      <div id="mobile-calendar" class="mobile-calendar" aria-label="모바일 월간 당직 일정"></div>
+    </section>
 
-<section id="upcoming" class="upcoming">
-  <h2>다가오는 당직</h2>
-  <div id="upcoming-list" class="upcoming-list"></div>
-</section>
+    <section id="upcoming" class="upcoming" aria-label="다가오는 당직">
+      <div class="upcoming-heading">
+        <div>
+          <p class="section-kicker">UP NEXT</p>
+          <h2>다가오는 당직</h2>
+        </div>
+        <p>가장 가까운 10건의 일정입니다.</p>
+      </div>
+      <div id="upcoming-list" class="upcoming-list"></div>
+    </section>
+  </main>
 
-<!-- Day edit modal -->
-<dialog id="day-modal" class="modal">
-  <form method="dialog" id="day-form">
-    <h3 id="day-modal-title">날짜 수정</h3>
-
-    <label class="field">
-      <span>구분</span>
-      <select id="f-type">
-        <option value="평일">평일</option>
-        <option value="휴일">휴일</option>
-      </select>
-    </label>
-
-    <div id="weekend-fields">
+  <dialog id="day-modal" class="modal">
+    <form method="dialog" id="day-form">
+      <p class="section-kicker">EDIT DUTY</p>
+      <h3 id="day-modal-title">날짜 수정</h3>
       <label class="field">
-        <span>당직 조직</span>
-        <select id="f-org">
-          <option value="영기">영기</option>
-          <option value="소강">소강</option>
-          <option value="도강">도강</option>
-          <option value="전산휴무">전산휴무</option>
-          <option value="">(없음)</option>
+        <span>구분</span>
+        <select id="f-type">
+          <option value="평일">평일</option>
+          <option value="휴일">휴일</option>
         </select>
       </label>
+      <div id="weekend-fields">
+        <label class="field">
+          <span>당직 조직</span>
+          <select id="f-org">
+            <option value="영기">영기</option>
+            <option value="소강">소강</option>
+            <option value="도강">도강</option>
+            <option value="전산휴무">전산휴무</option>
+            <option value="">(없음)</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>영기 담당자 <small>(영기 조직일 때)</small></span>
+          <input id="f-weekend-person" type="text" placeholder="예: 배병모">
+        </label>
+        <label class="field">
+          <span>비고</span>
+          <input id="f-note" type="text" placeholder="예: (추가)권순욱, 명절연휴 등">
+        </label>
+      </div>
+      <div id="weekday-fields">
+        <label class="field">
+          <span>영기 평일 당직자</span>
+          <input id="f-weekday-person" type="text" placeholder="예: 임나현">
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="btn-day-delete" class="btn btn-danger">일정 비우기</button>
+        <div class="spacer"></div>
+        <button type="button" id="btn-day-cancel" class="btn btn-outline">취소</button>
+        <button type="button" id="btn-day-save" class="btn btn-primary">적용</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="settings-modal" class="modal">
+    <form method="dialog" id="settings-form">
+      <p class="section-kicker">GITHUB CONNECTION</p>
+      <h3>저장 연결 설정</h3>
+      <p class="hint">수정한 일정은 이 설정을 이용해 GitHub 저장소의 <code>data/schedule.json</code> 파일에 저장됩니다. 토큰은 이 브라우저에만 보관됩니다.</p>
       <label class="field">
-        <span>영기 담당자 (영기 조직일 때)</span>
-        <input id="f-weekend-person" type="text" placeholder="예: 배병모">
+        <span>저장소 소유자</span>
+        <input id="s-owner" type="text" placeholder="예: cyo5812">
       </label>
       <label class="field">
-        <span>비고</span>
-        <input id="f-note" type="text" placeholder="예: (추가)권순욱, 명절연휴 등">
+        <span>저장소 이름</span>
+        <input id="s-repo" type="text" placeholder="예: youngki_dangzik">
       </label>
-    </div>
-
-    <div id="weekday-fields">
       <label class="field">
-        <span>영기 평일 당직자</span>
-        <input id="f-weekday-person" type="text" placeholder="예: 임나현">
+        <span>브랜치</span>
+        <input id="s-branch" type="text" placeholder="예: main">
       </label>
-    </div>
+      <label class="field">
+        <span>Personal Access Token</span>
+        <input id="s-token" type="password" placeholder="ghp_... (Contents 쓰기 권한 필요)">
+      </label>
+      <p class="hint">토큰은 GitHub에서 발급한 뒤, 이 저장소에 대해서만 <strong>Contents: Read and write</strong> 권한을 부여해 사용하세요.</p>
+      <div class="modal-actions">
+        <div class="spacer"></div>
+        <button type="button" id="btn-settings-cancel" class="btn btn-outline">취소</button>
+        <button type="button" id="btn-settings-save" class="btn btn-primary">저장</button>
+      </div>
+    </form>
+  </dialog>
 
-    <div class="modal-actions">
-      <button type="button" id="btn-day-delete" class="btn btn-danger">이 날짜 당직 비우기</button>
-      <div class="spacer"></div>
-      <button type="button" id="btn-day-cancel" class="btn btn-outline">취소</button>
-      <button type="button" id="btn-day-save" class="btn btn-primary">적용</button>
-    </div>
-  </form>
-</dialog>
-
-<!-- Settings modal -->
-<dialog id="settings-modal" class="modal">
-  <form method="dialog" id="settings-form">
-    <h3>GitHub 연결 설정</h3>
-    <p class="hint">
-      수정 모드에서 저장하면 이 정보로 GitHub 저장소의 <code>data/schedule.json</code> 파일을
-      직접 커밋합니다. 토큰은 이 브라우저에만 저장되며 외부로 전송되지 않습니다
-      (GitHub API 호출 시에만 사용).
-    </p>
-    <label class="field">
-      <span>저장소 소유자 (owner)</span>
-      <input id="s-owner" type="text" placeholder="예: cyo5812">
-    </label>
-    <label class="field">
-      <span>저장소 이름 (repo)</span>
-      <input id="s-repo" type="text" placeholder="예: youngki_dangzik">
-    </label>
-    <label class="field">
-      <span>브랜치</span>
-      <input id="s-branch" type="text" placeholder="예: main">
-    </label>
-    <label class="field">
-      <span>Personal Access Token</span>
-      <input id="s-token" type="password" placeholder="ghp_... (Contents 쓰기 권한 필요)">
-    </label>
-    <p class="hint">
-      토큰 발급: GitHub → Settings → Developer settings → Fine-grained tokens →
-      이 저장소만 선택 → Repository permissions에서 <b>Contents: Read and write</b> 권한 부여.
-    </p>
-    <div class="modal-actions">
-      <div class="spacer"></div>
-      <button type="button" id="btn-settings-cancel" class="btn btn-outline">취소</button>
-      <button type="button" id="btn-settings-save" class="btn btn-primary">저장</button>
-    </div>
-  </form>
-</dialog>
-
-<div id="toast" class="toast" hidden></div>
-
-<script src="app.js"></script>
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
 </body>
 </html>
