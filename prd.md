@@ -70,11 +70,10 @@
 | 계층 | 선택 | 버전 | 라이선스 |
 |---|---|---|---|
 | 런타임 | Python | 3.12 (`python:3.12-slim`) | PSF |
-| 웹 프레임워크 | FastAPI | 0.115.x | MIT |
-| ASGI 서버 | uvicorn[standard] | 0.32.x | BSD-3-Clause |
-| DB 드라이버 | asyncpg | 0.30.x | Apache-2.0 |
-| 엑셀 파싱 | openpyxl | 3.1.x | MIT |
-| 업로드 파싱 | python-multipart | 0.0.x | Apache-2.0 |
+| 웹 프레임워크 | FastAPI | 0.141.1 | MIT |
+| ASGI 서버 | uvicorn | 0.52.4 | BSD-3-Clause |
+| DB 드라이버 | asyncpg | 0.31.0 | Apache-2.0 |
+| 엑셀 파싱 | openpyxl | 3.1.5 | MIT |
 | DB | PostgreSQL | 16 | PostgreSQL License |
 | 프론트엔드 | Vanilla JS + CSS (빌드 도구 없음) | — | 자체 작성 |
 
@@ -82,6 +81,9 @@
 DB 드라이버로 흔히 쓰는 `psycopg`/`psycopg2`는 **LGPL-3.0**이라 「검토 필요」 등급이므로
 같은 기능을 하는 **Apache-2.0 라이선스의 `asyncpg`로 대체**했다.
 프론트엔드는 외부 라이브러리·CDN·웹폰트를 전혀 쓰지 않는다(클러스터 외부 통신 차단 정책 대응).
+엑셀 업로드는 `multipart/form-data` 대신 **요청 본문 직접 전송**을 쓴다. Starlette 의 `UploadFile` 은
+1MB 를 넘는 업로드를 임시파일로 디스크에 흘려 무상태성·`readOnlyRootFilesystem` 과 충돌하기 때문이다.
+덕분에 `python-multipart` 의존성도 필요 없어졌다.
 
 ---
 
@@ -117,8 +119,9 @@ DB 드라이버로 흔히 쓰는 `psycopg`/`psycopg2`는 **LGPL-3.0**이라 「�
 - **하루 = 한 행.** 날짜(`duty_date`)가 기본키다.
 - `day_type` 은 `평일` · `휴일` 두 값만 허용한다.
 - `휴일` 이면 `org` 는 `영기`·`소강`·`도강`·`전산휴무` 중 하나 또는 비움.
-  `org` 가 `영기` 일 때만 `person`(영기팀 담당자)을 채운다. 다른 조직이면 서버가 `person` 을 비운다.
-- `평일` 이면 `org` 는 비우고 `person` 에 영기팀 평일 당직자를 넣는다.
+- `평일` 이면 `org` 를 비운다(3팀 순환 대상이 아님).
+- `person`(담당자)은 **조직과 무관하게** 채울 수 있다. 실제 데이터에 `도강 · 최진필` 처럼
+  영기가 아닌 조직 차례에도 담당자가 적힌 행이 있어, 조직으로 제한하면 값이 소리 없이 사라진다.
 - 응답은 기존 화면 로직과 호환되도록 `weekendDuty[]` · `weekdayDuty[]` 두 배열로 변환해 내려준다.
 
 ### 예외 처리 정책 (RFC 7807 `application/problem+json`)

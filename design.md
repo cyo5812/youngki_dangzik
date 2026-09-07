@@ -81,13 +81,13 @@ erDiagram
 | `day_type` | `TEXT` | NOT NULL, CHECK(`평일`,`휴일`) | 구분 |
 | `org` | `TEXT` | CHECK(NULL 또는 `영기`·`소강`·`도강`·`전산휴무`) | 휴일 당직 조직. 평일은 NULL |
 | `person` | `TEXT` | NOT NULL DEFAULT `''`, ≤50자 | 담당자 성명. **조직과 무관하게 채울 수 있다** (아래 주 참고) |
+| `note` | `TEXT` | NOT NULL DEFAULT `''`, ≤200자 | 비고 |
+| `updated_at` | `TIMESTAMPTZ` | NOT NULL DEFAULT `now()` | 최종 수정 시각 |
 
 > **`person` 을 영기 조직으로 제한하지 않는 이유** — 원본 엑셀의 해당 열 제목은 「영기 주말 당직」이지만,
 > 실제 데이터에는 `2026-09-19 · org=도강 · person=최진필` 처럼 다른 조직 차례에도 담당자가 적힌 행이 있다.
 > "영기일 때만 담당자" 규칙을 넣으면 이 값이 저장 시 소리 없이 지워진다.
 > **실무 데이터가 규칙보다 우선한다.** 제약은 열거값·길이 검증까지만 두고, 담당자 유무는 사용자 판단에 맡긴다.
-| `note` | `TEXT` | NOT NULL DEFAULT `''`, ≤200자 | 비고 |
-| `updated_at` | `TIMESTAMPTZ` | NOT NULL DEFAULT `now()` | 최종 수정 시각 |
 
 > **왜 두 테이블(주말/평일)로 나누지 않는가** — 원본 엑셀은 표가 둘이지만 실제로는 **한 날짜에 당직 상태 하나**다.
 > 두 표로 나누면 "같은 날짜가 양쪽에 다른 값으로 존재"하는 모순 상태를 DB가 막아주지 못한다.
@@ -175,7 +175,11 @@ readinessProbe 용. DB 연결까지 확인한다.
 
 ### POST `/api/schedule/import` — 엑셀 일괄 반영
 
-`multipart/form-data`, 필드명 `file`, `.xlsx` 만 허용, **10MB 상한**.
+**요청 본문에 `.xlsx` 바이트를 그대로 전송**한다(`multipart` 아님). **10MB 상한**.
+
+> `multipart/form-data` 를 쓰지 않는 이유 — Starlette 의 `UploadFile` 은 1MB 를 넘는 업로드를
+> `SpooledTemporaryFile` 로 **디스크에 흘린다.** 무상태성 원칙과 `readOnlyRootFilesystem` 선언에 정면으로 걸린다.
+> 본문을 스트림으로 받아 메모리에서 상한을 걸면 디스크를 건드리지 않고, `python-multipart` 의존성도 사라진다.
 
 ```json
 200 { "replaced": 144, "snapshotId": 87, "message":"144건으로 교체했습니다" }
