@@ -80,7 +80,12 @@ erDiagram
 | `duty_date` | `DATE` | PK | 날짜가 곧 식별자. 하루에 두 행이 생길 수 없다 |
 | `day_type` | `TEXT` | NOT NULL, CHECK(`평일`,`휴일`) | 구분 |
 | `org` | `TEXT` | CHECK(NULL 또는 `영기`·`소강`·`도강`·`전산휴무`) | 휴일 당직 조직. 평일은 NULL |
-| `person` | `TEXT` | NOT NULL DEFAULT `''`, ≤50자 | 평일이면 영기팀 당직자, 휴일이면 영기 조직일 때만 값 |
+| `person` | `TEXT` | NOT NULL DEFAULT `''`, ≤50자 | 담당자 성명. **조직과 무관하게 채울 수 있다** (아래 주 참고) |
+
+> **`person` 을 영기 조직으로 제한하지 않는 이유** — 원본 엑셀의 해당 열 제목은 「영기 주말 당직」이지만,
+> 실제 데이터에는 `2026-09-19 · org=도강 · person=최진필` 처럼 다른 조직 차례에도 담당자가 적힌 행이 있다.
+> "영기일 때만 담당자" 규칙을 넣으면 이 값이 저장 시 소리 없이 지워진다.
+> **실무 데이터가 규칙보다 우선한다.** 제약은 열거값·길이 검증까지만 두고, 담당자 유무는 사용자 판단에 맡긴다.
 | `note` | `TEXT` | NOT NULL DEFAULT `''`, ≤200자 | 비고 |
 | `updated_at` | `TIMESTAMPTZ` | NOT NULL DEFAULT `now()` | 최종 수정 시각 |
 
@@ -159,10 +164,10 @@ readinessProbe 용. DB 연결까지 확인한다.
 
 | 입력 | 서버 처리 |
 |---|---|
-| `dayType="평일"` 인데 `org` 가 옴 | `org` 를 NULL 로 무시 |
-| `dayType="휴일"` 이고 `org≠영기` 인데 `person` 이 옴 | `person` 을 `''` 로 비움 |
+| `dayType="평일"` 인데 `org` 가 옴 | `org` 를 NULL 로 무시 (평일은 3팀 순환 대상이 아님) |
 | `person`·`note` 앞뒤 공백 | trim |
 | 제어문자·개행 포함 | 제거 |
+| 정의되지 않은 필드가 섞여 옴 | 요청 자체를 400 으로 거부 (`extra="forbid"`) |
 
 ### DELETE `/api/schedule/{duty_date}` — 하루 비우기
 
