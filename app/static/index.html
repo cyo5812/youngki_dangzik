@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#172554">
+  <meta name="description" content="영업총괄 3팀 주말·휴일 순환 당직과 영기팀 평일 당직 일정표입니다.">
+  <title>당직 일정표</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell topbar">
+      <div class="brand">
+        <h1>당직 일정표</h1>
+        <p class="brand-description">영업총괄 3팀 주말·휴일 순환 당직 · 영기팀 평일 당직</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="btn-edit-toggle" class="btn btn-outline">수정 모드</button>
+        <button id="btn-import" class="btn btn-outline" hidden>엑셀 반영</button>
+        <button id="btn-history" class="btn btn-outline">변경 이력</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell page-content">
+    <section class="legend" aria-label="당직 구분 안내">
+      <div class="legend-groups">
+        <span class="chip org-영기"><i></i>영기</span>
+        <span class="chip org-소강"><i></i>소강</span>
+        <span class="chip org-도강"><i></i>도강</span>
+        <span class="chip org-전산휴무"><i></i>전산휴무</span>
+      </div>
+      <span id="updated-note" class="legend-note">불러오는 중…</span>
+    </section>
+
+    <section class="calendar-panel" aria-label="월간 당직 일정">
+      <div class="calendar-panel-header">
+        <div>
+          <p class="section-kicker">DUTY CALENDAR</p>
+          <h2 id="month-label" class="month-label">-</h2>
+        </div>
+        <nav class="month-nav" aria-label="월 선택">
+          <button id="btn-prev" class="btn btn-outline nav-button"><span aria-hidden="true">←</span> 이전</button>
+          <button id="btn-today" class="btn btn-quiet">이번 달</button>
+          <button id="btn-next" class="btn btn-outline nav-button">다음 <span aria-hidden="true">→</span></button>
+        </nav>
+      </div>
+      <div id="calendar" class="calendar"></div>
+      <div id="mobile-calendar" class="mobile-calendar" aria-label="모바일 월간 당직 일정"></div>
+    </section>
+
+    <section id="upcoming" class="upcoming" aria-label="다가오는 당직">
+      <div class="upcoming-heading">
+        <div>
+          <p class="section-kicker">UP NEXT</p>
+          <h2>다가오는 당직</h2>
+        </div>
+        <p>가장 가까운 10건의 일정입니다.</p>
+      </div>
+      <div id="upcoming-list" class="upcoming-list"></div>
+    </section>
+  </main>
+
+  <!-- 하루치 수정 -->
+  <dialog id="day-modal" class="modal">
+    <form method="dialog" id="day-form">
+      <p class="section-kicker">EDIT DUTY</p>
+      <h3 id="day-modal-title">날짜 수정</h3>
+      <label class="field">
+        <span>구분</span>
+        <select id="f-type">
+          <option value="평일">평일</option>
+          <option value="휴일">휴일</option>
+        </select>
+      </label>
+      <label class="field" id="field-org">
+        <span>당직 조직</span>
+        <select id="f-org">
+          <option value="영기">영기</option>
+          <option value="소강">소강</option>
+          <option value="도강">도강</option>
+          <option value="전산휴무">전산휴무</option>
+          <option value="">(없음)</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>담당자</span>
+        <input id="f-person" type="text" maxlength="50" placeholder="예: 배병모" autocomplete="off">
+      </label>
+      <label class="field" id="field-note">
+        <span>비고</span>
+        <input id="f-note" type="text" maxlength="200" placeholder="예: (추가)권순욱, 명절연휴 등" autocomplete="off">
+      </label>
+      <div class="modal-actions">
+        <button type="button" id="btn-day-delete" class="btn btn-danger">일정 비우기</button>
+        <div class="spacer"></div>
+        <button type="button" id="btn-day-cancel" class="btn btn-outline">취소</button>
+        <button type="button" id="btn-day-save" class="btn btn-primary">저장</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 엑셀 일괄 반영 -->
+  <dialog id="import-modal" class="modal">
+    <form method="dialog">
+      <p class="section-kicker">IMPORT</p>
+      <h3>엑셀로 일정 일괄 반영</h3>
+      <p class="hint">
+        당직표 엑셀(<code>.xlsx</code>)을 올리면 <strong>전체 일정이 교체</strong>됩니다.
+        교체 직전 상태는 자동으로 저장되므로, 잘못 올렸다면 <strong>변경 이력</strong>에서 되돌릴 수 있습니다.
+      </p>
+      <label class="field">
+        <span>엑셀 파일 <small>(최대 10MB)</small></span>
+        <input id="f-file" type="file" accept=".xlsx">
+      </label>
+      <p id="import-filename" class="hint" hidden></p>
+      <div class="modal-actions">
+        <div class="spacer"></div>
+        <button type="button" id="btn-import-cancel" class="btn btn-outline">취소</button>
+        <button type="button" id="btn-import-run" class="btn btn-primary">전체 교체</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 변경 이력 -->
+  <dialog id="history-modal" class="modal modal-wide">
+    <form method="dialog">
+      <p class="section-kicker">HISTORY</p>
+      <h3>변경 이력</h3>
+      <p class="hint">되돌리기를 누르면 그 변경 <strong>직전 상태</strong>로 복원합니다. 되돌리기 자체도 이력에 남습니다.</p>
+      <div id="history-list" class="history-list"></div>
+      <div class="modal-actions">
+        <div class="spacer"></div>
+        <button type="button" id="btn-history-close" class="btn btn-outline">닫기</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 관리자 키 (서버에 키가 주입된 경우에만 뜬다) -->
+  <dialog id="key-modal" class="modal">
+    <form method="dialog">
+      <p class="section-kicker">ADMIN KEY</p>
+      <h3>관리자 키 입력</h3>
+      <p class="hint">이 서버는 수정에 관리자 키를 요구하도록 설정돼 있습니다. 키는 이 탭에만 보관되며 창을 닫으면 지워집니다.</p>
+      <label class="field">
+        <span>관리자 키</span>
+        <input id="f-admin-key" type="password" autocomplete="off">
+      </label>
+      <div class="modal-actions">
+        <div class="spacer"></div>
+        <button type="button" id="btn-key-cancel" class="btn btn-outline">취소</button>
+        <button type="button" id="btn-key-save" class="btn btn-primary">확인</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
