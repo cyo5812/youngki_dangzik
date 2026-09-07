@@ -1,0 +1,16 @@
+# 사내 CA 인증서 — 공개키라 비밀은 아니지만 각자 환경에서 생성하는 파일이라 커밋하지 않는다
+corp-ca.crt
+
+# 환경변수 (DB 접속정보·관리자 키가 들어간다 — 절대 커밋 금지)
+.env
+
+# 파이썬
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# 로컬 개발 산출물
+.pytest_cache/
+.coverage

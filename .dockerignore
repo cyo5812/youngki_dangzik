@@ -1,0 +1,37 @@
+# 이미지에 들어갈 필요가 없는 것 — 빌드 컨텍스트를 줄이면 빌드도 빠르고 공격면도 준다.
+
+# 비밀정보 (절대 이미지에 들어가면 안 됨)
+.env
+.env.*
+
+# 버전관리·CI
+.git
+.gitignore
+.github
+.claude
+
+# 파이썬 로컬 산출물
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# 문서·기획 산출물 (앱 실행에 불필요)
+*.md
+prd.md
+design.md
+
+# 기존 GitHub Pages 버전 자산 (사내 배포 이미지에는 포함하지 않는다)
+/index.html
+/app.js
+/style.css
+/data
+/scripts
+
+# 주의 ── corp-ca.crt 는 여기에 넣지 않는다.
+# Dockerfile 이 패키지 설치 전에 COPY corp-ca.crt 를 수행하므로,
+# 이 파일을 무시하면 빌드가 "file not found" 로 실패한다.
+# 대신 .gitignore 에 넣어 저장소에 커밋되지 않게 막는다.

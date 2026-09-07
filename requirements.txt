@@ -1,0 +1,29 @@
+# 당직 일정표 — 의존성 (SCA 진단용으로 전이 의존성까지 버전 고정)
+#
+# 라이선스는 전부 사내 허용 목록(MIT · Apache-2.0 · BSD)에 속한다.
+# PostgreSQL 드라이버로 흔히 쓰는 psycopg/psycopg2 는 LGPL-3.0 「검토 필요」 등급이라
+# 같은 기능의 asyncpg(Apache-2.0)로 대체했다.
+#
+# uvicorn 은 [standard] 추가옵션을 쓰지 않는다. watchfiles 등 개발 전용 패키지 6종이
+# 딸려 와 취약점 스캔·패치 대상만 늘어나고, 이 규모에서 성능 이득이 없다.
+
+# --- 직접 의존성 ---
+fastapi==0.141.1            # MIT
+uvicorn==0.52.4             # BSD-3-Clause
+asyncpg==0.31.0             # Apache-2.0
+openpyxl==3.1.5             # MIT
+python-multipart==0.0.32    # Apache-2.0
+
+# --- 전이 의존성 (빌드 재현성을 위해 고정) ---
+annotated-doc==0.0.5        # MIT
+annotated-types==0.8.0      # MIT
+anyio==4.15.1               # MIT
+click==8.5.0                # BSD-3-Clause
+et-xmlfile==2.0.0           # MIT
+h11==0.16.0                 # MIT
+idna==3.19                  # BSD-3-Clause
+pydantic==2.13.5            # MIT
+pydantic-core==2.46.5       # MIT
+starlette==1.6.0            # BSD-3-Clause
+typing-extensions==4.16.0   # PSF
+typing-inspection==0.4.4    # MIT
