@@ -14,6 +14,7 @@ import logging
 
 import asyncpg
 
+from app import repository as repo
 from app.config import Settings
 
 logger = logging.getLogger("duty.db")
@@ -85,7 +86,7 @@ class Database:
             return False
         try:
             async with self._pool.acquire() as conn:
-                await conn.fetchval("SELECT 1")
+                await repo.ping(conn)
         except Exception as exc:
             logger.warning("헬스체크 실패: %s", type(exc).__name__)
             return False

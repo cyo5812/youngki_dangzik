@@ -18,6 +18,11 @@ import asyncpg
 _DUTY_COLUMNS = "duty_date, day_type, org, person, note"
 
 
+async def ping(conn: asyncpg.Connection) -> None:
+    """연결이 살아 있는지 확인하는 최소 질의. 헬스체크가 쓴다."""
+    await conn.fetchval("SELECT 1")
+
+
 # --------------------------------------------------------------------------
 # 당직 일정 (duty_day)
 # --------------------------------------------------------------------------

@@ -20,7 +20,6 @@ from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app import repository as repo
 from app.config import Settings, load_settings
 from app.db import Database
 from app.errors import (
@@ -123,11 +122,35 @@ async def _http_handler(_: Request, exc: StarletteHTTPException) -> Response:
     )
 
 
-@app.exception_handler(asyncpg.PostgresError)
-async def _db_handler(_: Request, exc: asyncpg.PostgresError) -> JSONResponse:
-    """DB 오류. 드라이버 메시지는 로그에만 남기고 사용자에겐 일반화된 문장만 준다."""
-    logger.error("DB 오류", exc_info=exc)
-    return problem_response(503, "일시적 오류", "일시적으로 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.")
+async def _db_unavailable_handler(_: Request, exc: Exception) -> JSONResponse:
+    """DB 를 쓸 수 없는 상황. 드라이버 메시지는 로그에만 남기고 일반화된 문장만 준다.
+
+    잡아야 할 범위가 셋이다. 하나라도 빠뜨리면 그 경우만 500 으로 새어 나간다.
+      · PostgresError  — 서버가 보고한 오류
+      · InterfaceError — 커넥션이 끊긴 상태 (서버가 내려간 경우가 여기다)
+      · OSError        — 소켓 자체를 열지 못한 경우(Connection refused)
+    """
+    logger.error("DB 사용 불가", exc_info=exc)
+    return problem_response(
+        503, "일시적 오류", "일시적으로 처리할 수 없습니다. 잠시 후 다시 시도해 주세요."
+    )
+
+
+async def _db_constraint_handler(_: Request, exc: Exception) -> JSONResponse:
+    """DB 제약 위반. 검증을 통과한 값이 DB 규칙에 걸린 경우이므로 입력 오류로 돌려준다.
+
+    503(일시적 오류)으로 뭉뚱그리면 사용자가 재시도만 반복하게 된다 — 다시 해도 똑같이 실패한다.
+    """
+    logger.warning("DB 제약 위반: %s", type(exc).__name__)
+    return problem_response(400, "입력값 오류", "저장할 수 없는 값이 있습니다. 입력값을 확인해 주세요.")
+
+
+# 구체적인 것부터 등록한다. 제약 위반은 PostgresError 의 하위 유형이다.
+app.add_exception_handler(
+    asyncpg.exceptions.IntegrityConstraintViolationError, _db_constraint_handler
+)
+for _db_exc in (asyncpg.PostgresError, asyncpg.InterfaceError, OSError, TimeoutError):
+    app.add_exception_handler(_db_exc, _db_unavailable_handler)
 
 
 @app.exception_handler(Exception)

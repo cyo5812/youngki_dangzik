@@ -236,11 +236,12 @@ youngki_dangzik/
 │  ├─ repository.py            # SQL 전담 (파라미터 바인딩만)
 │  ├─ services/
 │  │  ├─ schedule.py           # 정규화 · 두 배열 변환 · 이력 요약문 생성
-│  │  └─ excel.py              # 엑셀 파싱 (openpyxl, read_only 모드)
+│  │  └─ excel.py              # 엑셀 파싱 (openpyxl read_only + 행·열 상한)
 │  └─ static/                  # ← 화면 정본
 │     ├─ index.html
 │     ├─ app.js
-│     └─ style.css
+│     ├─ style.css
+│     └─ favicon.svg
 └─ (기존 GitHub Pages 자산: index.html · app.js · style.css · data/ · scripts/ · .github/)
 ```
 
@@ -321,8 +322,9 @@ sequenceDiagram
 | **잘못된 입력** | Pydantic 타입·길이·열거값 검증 → 통과 못 하면 400. 서버 정규화로 모순 상태 차단 | `models.py`, `services/schedule.py` |
 | **CSRF** | 쿠키·세션을 쓰지 않아 브라우저가 자동 첨부할 자격증명이 없음. 관리자 키는 **헤더**로만 받음 | 설계상 해소 |
 | **대용량 업로드 DoS** | 10MB 상한을 본문 소비 **전에** 검사. `read_only` 파서로 메모리 상한 | `main.py`, `services/excel.py` |
-| **엑셀 폭탄(수식·외부참조)** | `openpyxl` `data_only=True` + `read_only=True` — 수식 평가·매크로 실행 없음 | `services/excel.py` |
+| **엑셀 폭탄(수식·압축)** | `data_only=True`(수식 미평가) + `read_only=True`(시트를 통째로 메모리에 안 올림) + 행 2000·열 60 상한 | `services/excel.py` |
 | **파괴적 실수** | 일괄 교체 전 전체 스냅샷 이력화 → 되돌리기 제공 | `services/schedule.py` |
+| **DB 장애** | PostgresError·InterfaceError·OSError·TimeoutError 를 모두 잡아 503. 제약 위반만 400 으로 분리 | `main.py` |
 | **정보 노출** | 오류 응답에 스택·SQL·접속정보 미포함. 상세는 서버 로그에만, 로그에도 비밀값·개인정보 미기록 | `errors.py` |
 | **비밀정보 하드코딩** | 접속정보·키를 전부 환경변수로. 소스·신청서에 실제 값 미기재 | `config.py` |
 | **클릭재킹·MIME 스니핑** | `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer` | `main.py` |
