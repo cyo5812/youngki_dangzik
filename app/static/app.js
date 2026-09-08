@@ -18,6 +18,7 @@ const state = {
   editMode: false,
   adminLockEnabled: false,
   editingDate: null,
+  editingSnapshot: null, // 모달을 연 시점의 서버 값. 변경 없음·충돌 판정에 쓴다
   updatedAt: null,
 };
 
@@ -86,7 +87,28 @@ function render() {
   renderUpdatedNote();
   renderCalendar();
   renderMobileCalendar();
+  renderEmptyMonthNotice();
   renderUpcoming();
+}
+
+/**
+ * [방어 5] 보고 있는 달에 일정이 하나도 없으면 이유를 알려 준다.
+ * 빈 달력만 보여 주면 고장인지 데이터가 없는 건지 사용자가 구분할 수 없다.
+ */
+function renderEmptyMonthNotice() {
+  const notice = $("#empty-month");
+  const prefix = `${state.viewYear}-${pad(state.viewMonth + 1)}`;
+  const hasAny = [...state.byDate.keys()].some((d) => d.startsWith(prefix));
+
+  if (hasAny) {
+    notice.hidden = true;
+    return;
+  }
+  const dates = [...state.byDate.keys()].sort();
+  notice.textContent = dates.length
+    ? `이 달에는 등록된 당직이 없습니다. 현재 일정은 ${dates[0]} ~ ${dates[dates.length - 1]} 범위입니다.`
+    : "등록된 당직 일정이 없습니다. 수정 모드에서 엑셀을 올리거나 날짜를 직접 입력해 주세요.";
+  notice.hidden = false;
 }
 
 function renderUpdatedNote() {
@@ -269,11 +291,47 @@ function toast(message, kind = "") {
   }, 4000);
 }
 
+/**
+ * 확인 대화상자. window.confirm 대신 화면 톤에 맞는 <dialog> 를 쓴다.
+ * 되돌릴 수 없거나 값이 사라지는 동작 앞에 세운다.
+ */
+function askConfirm(title, message, yesLabel = "계속") {
+  return new Promise((resolve) => {
+    const modal = $("#confirm-modal");
+    $("#confirm-title").textContent = title;
+    $("#confirm-message").textContent = message;
+    $("#btn-confirm-yes").textContent = yesLabel;
+
+    const done = (answer) => {
+      $("#btn-confirm-yes").removeEventListener("click", onYes);
+      $("#btn-confirm-no").removeEventListener("click", onNo);
+      modal.close();
+      resolve(answer);
+    };
+    const onYes = () => done(true);
+    const onNo = () => done(false);
+
+    $("#btn-confirm-yes").addEventListener("click", onYes);
+    $("#btn-confirm-no").addEventListener("click", onNo);
+    modal.showModal();
+  });
+}
+
+/** 두 일정이 실질적으로 같은지 비교한다(요일·갱신시각 같은 파생 값은 제외). */
+function sameEntry(a, b) {
+  const norm = (e) =>
+    e ? [e.type, e.org || "", e.person || "", e.note || ""].join("\u0001") : "";
+  return norm(a) === norm(b);
+}
+
 // ---------------------------------------------------------------- 하루 수정
 
 function openDayModal(dateStr) {
   state.editingDate = dateStr;
   const entry = state.byDate.get(dateStr);
+  // 연 시점의 값을 기억해 둔다. 저장할 때 "정말 바뀐 게 있는지"와
+  // "그 사이 다른 사람이 바꾸지 않았는지"를 판단하는 기준이 된다.
+  state.editingSnapshot = entry ? { ...entry } : null;
   const dow = DOW_LABELS[new Date(`${dateStr}T00:00:00`).getDay()];
 
   $("#day-modal-title").textContent = `${dateStr} (${dow}) 당직`;
@@ -302,6 +360,56 @@ async function saveDay() {
     person: $("#f-person").value,
     note: holiday ? $("#f-note").value : "",
   };
+
+  const before = state.editingSnapshot;
+  const after = {
+    type: payload.dayType,
+    org: payload.org || "",
+    person: payload.person.trim(),
+    note: payload.note.trim(),
+  };
+
+  // [방어 1] 바뀐 게 없으면 요청을 보내지 않는다.
+  // 스크롤 중 오터치로 열린 모달에서 그냥 저장을 눌러도 이력이 더러워지지 않는다.
+  if (sameEntry(before, after)) {
+    $("#day-modal").close();
+    toast("변경된 내용이 없습니다.");
+    return;
+  }
+
+  // [방어 2] 휴일 → 평일 전환은 비고를 지운다. 사라지기 전에 알린다.
+  if (before && before.type === "휴일" && !holiday && before.note) {
+    const ok = await askConfirm(
+      "비고가 삭제됩니다",
+      `평일로 바꾸면 비고 "${before.note}" 가 함께 지워집니다. 계속할까요?`,
+      "비고 지우고 저장"
+    );
+    if (!ok) return;
+  }
+
+  // [방어 3] 모달을 열어 둔 사이 다른 사람이 같은 날짜를 바꿨는지 확인한다.
+  // 그냥 저장하면 남의 변경이 말없이 덮이고, 덮은 사람도 그 사실을 모른다.
+  try {
+    const fresh = await api(`/api/schedule?from=${dateStr}&to=${dateStr}`);
+    const current = [...fresh.weekendDuty, ...fresh.weekdayDuty][0] || null;
+    if (!sameEntry(before, current)) {
+      const now = current
+        ? `${current.org || current.type} ${current.person || ""}`.trim()
+        : "비어 있음";
+      const ok = await askConfirm(
+        "다른 사람이 방금 수정했습니다",
+        `이 날짜는 현재 "${now}" 입니다. 내 내용으로 덮어쓸까요? (덮어써도 변경 이력에서 되돌릴 수 있습니다)`,
+        "덮어쓰기"
+      );
+      if (!ok) {
+        $("#day-modal").close();
+        await loadSchedule();
+        return;
+      }
+    }
+  } catch {
+    // 확인에 실패해도 저장 자체를 막지는 않는다. 저장 결과로 판단한다.
+  }
 
   try {
     const saved = await api(`/api/schedule/${dateStr}`, {
@@ -333,6 +441,63 @@ async function clearDay() {
 }
 
 // ---------------------------------------------------------------- 엑셀 반영
+
+/** 요약 한 줄을 만든다. */
+function summaryLine(label, summary) {
+  const row = document.createElement("div");
+  row.className = "preview-row";
+  const key = document.createElement("span");
+  key.className = "preview-label";
+  key.textContent = label;
+  const value = document.createElement("span");
+  value.textContent = summary.count
+    ? `${summary.count}건 · ${summary.firstDate} ~ ${summary.lastDate} (휴일 ${summary.holidays})`
+    : "없음";
+  row.append(key, value);
+  return row;
+}
+
+/**
+ * [방어 4] 파일을 고르면 먼저 파싱만 해 보고 무엇으로 바뀌는지 보여 준다.
+ * 작년 파일·다른 팀 파일은 형식이 같아 파싱에 성공한다. 형식으로 못 거르니 사람이 보고 판단하게 한다.
+ */
+async function previewImport() {
+  const box = $("#import-preview");
+  const runButton = $("#btn-import-run");
+  const file = $("#f-file").files[0];
+
+  box.replaceChildren();
+  box.hidden = true;
+  runButton.disabled = true;
+  if (!file) return;
+
+  try {
+    const preview = await api("/api/schedule/import/preview", {
+      method: "POST",
+      headers: { "Content-Type": "application/octet-stream" },
+      body: file,
+    });
+
+    box.appendChild(summaryLine("현재", preview.current));
+    const arrow = document.createElement("div");
+    arrow.className = "preview-arrow";
+    arrow.textContent = "↓ 교체 후";
+    box.appendChild(arrow);
+    box.appendChild(summaryLine("변경", preview.incoming));
+
+    for (const warning of preview.warnings) {
+      const warn = document.createElement("div");
+      warn.className = "preview-warn";
+      warn.textContent = `주의 · ${warning}`;
+      box.appendChild(warn);
+    }
+
+    box.hidden = false;
+    runButton.disabled = false;
+  } catch (err) {
+    handleError(err, "엑셀을 읽지 못했습니다.");
+  }
+}
 
 async function runImport() {
   const file = $("#f-file").files[0];
@@ -496,8 +661,12 @@ function wireEvents() {
 
   $("#btn-import").addEventListener("click", () => {
     $("#f-file").value = "";
+    $("#import-preview").replaceChildren();
+    $("#import-preview").hidden = true;
+    $("#btn-import-run").disabled = true;
     $("#import-modal").showModal();
   });
+  $("#f-file").addEventListener("change", previewImport);
   $("#btn-import-run").addEventListener("click", runImport);
   $("#btn-import-cancel").addEventListener("click", () => $("#import-modal").close());
 
@@ -506,6 +675,14 @@ function wireEvents() {
 
   $("#btn-key-save").addEventListener("click", saveAdminKey);
   $("#btn-key-cancel").addEventListener("click", () => $("#key-modal").close());
+
+  // [방어 6] 오래 열어 둔 탭 대응. 다시 보일 때 서버 상태를 다시 읽는다.
+  // 어제 열어 둔 화면에서 '오늘' 표시와 남의 변경이 어긋난 채 수정하는 일을 막는다.
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && !state.editMode) {
+      loadSchedule().catch(() => {});
+    }
+  });
 }
 
 async function init() {

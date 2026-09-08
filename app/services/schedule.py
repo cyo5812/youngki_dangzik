@@ -17,6 +17,8 @@ from app import repository as repo
 from app.errors import ProblemError
 from app.models import (
     DayType,
+    ImportPreviewOut,
+    ScheduleSummary,
     DutyDayOut,
     DutyUpsert,
     HistoryItemOut,
@@ -324,3 +326,66 @@ async def revert(conn: asyncpg.Connection, change_id: int) -> int:
         )
 
     return len(target_rows)
+
+
+# --------------------------------------------------------------------------
+# 엑셀 미리보기 — 바꾸기 전에 무엇으로 바뀌는지 보여 준다
+# --------------------------------------------------------------------------
+
+
+def _summarize_rows(rows: Sequence[DutyRow]) -> ScheduleSummary:
+    if not rows:
+        return ScheduleSummary()
+    dates = [r[0] for r in rows]
+    return ScheduleSummary(
+        count=len(rows),
+        firstDate=min(dates).isoformat(),
+        lastDate=max(dates).isoformat(),
+        holidays=sum(1 for r in rows if r[1] == "휴일"),
+    )
+
+
+def _summarize_records(records: Sequence[asyncpg.Record]) -> ScheduleSummary:
+    return _summarize_rows(
+        [(r["duty_date"], r["day_type"], r["org"], r["person"], r["note"]) for r in records]
+    )
+
+
+def _import_warnings(current: ScheduleSummary, incoming: ScheduleSummary) -> list[str]:
+    """올린 파일이 수상한지 짚어 준다. 막지는 않되 사용자가 알고 누르게 한다.
+
+    작년 당직표나 다른 팀 파일은 형식이 같아 파싱에 성공한다.
+    형식으로는 걸러낼 수 없으니 **내용의 어긋남**을 근거로 경고한다.
+    """
+    warnings: list[str] = []
+    if not current.count or not incoming.count:
+        return warnings
+
+    # 기간이 전혀 겹치지 않으면 다른 해의 파일일 가능성이 높다.
+    if current.lastDate and incoming.firstDate and current.firstDate and incoming.lastDate:
+        if incoming.firstDate > current.lastDate or incoming.lastDate < current.firstDate:
+            warnings.append(
+                f"기간이 현재 일정({current.firstDate}~{current.lastDate})과 "
+                f"전혀 겹치지 않습니다. 다른 해의 파일인지 확인하세요."
+            )
+
+    # 건수가 절반 이하로 줄면 표가 잘렸거나 다른 파일일 수 있다.
+    if incoming.count * 2 <= current.count:
+        warnings.append(
+            f"일정이 {current.count}건에서 {incoming.count}건으로 크게 줄어듭니다."
+        )
+    return warnings
+
+
+async def preview_import(
+    conn: asyncpg.Connection,
+    rows: Sequence[DutyRow],
+) -> ImportPreviewOut:
+    """교체하지 않고 결과만 미리 계산한다. DB 는 읽기만 한다."""
+    current = _summarize_records(await repo.fetch_days(conn))
+    incoming = _summarize_rows(rows)
+    return ImportPreviewOut(
+        current=current,
+        incoming=incoming,
+        warnings=_import_warnings(current, incoming),
+    )

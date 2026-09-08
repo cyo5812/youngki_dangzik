@@ -33,6 +33,7 @@ from app.models import (
     DutyDayOut,
     DutyUpsert,
     HistoryOut,
+    ImportPreviewOut,
     ImportResultOut,
     RevertResultOut,
     ScheduleOut,
@@ -272,6 +273,24 @@ async def delete_day(
     async with database.pool.acquire() as conn:
         await schedule_service.clear_day(conn, duty_date)
     return Response(status_code=204)
+
+
+@app.post("/api/schedule/import/preview", response_model=ImportPreviewOut, dependencies=[Depends(require_admin)])
+async def preview_excel(
+    request: Request,
+    settings: Settings = Depends(get_settings),
+    database: Database = Depends(get_database),
+) -> ImportPreviewOut:
+    """엑셀을 파싱만 해 보고 결과를 미리 보여 준다. **DB 는 읽기만 한다.**
+
+    작년 파일이나 다른 팀 파일은 형식이 같아 파싱에 성공한다. 형식으로 못 거르니
+    바뀔 내용을 먼저 보여 주고 사람이 판단하게 한다.
+    """
+    content = await _read_body_limited(request, settings.max_upload_bytes)
+    rows = excel_service.parse_duty_workbook(content)
+
+    async with database.pool.acquire() as conn:
+        return await schedule_service.preview_import(conn, rows)
 
 
 @app.post("/api/schedule/import", response_model=ImportResultOut, dependencies=[Depends(require_admin)])

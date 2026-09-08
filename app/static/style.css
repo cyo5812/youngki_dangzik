@@ -146,3 +146,12 @@ button { -webkit-tap-highlight-color: transparent; }
 .btn-mini { min-height: 30px; padding: 5px 10px; font-size: .74rem; }
 .field input[type="file"] { padding: 7px; background: #f8fafc; }
 .is-busy { opacity: .55; pointer-events: none; }
+
+.preview { margin: 4px 0 2px; border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; background: #fbfdff; font-size: .8rem; }
+.preview-row { display: flex; align-items: baseline; gap: 8px; padding: 3px 0; color: #334155; }
+.preview-label { min-width: 60px; color: var(--muted); font-size: .74rem; font-weight: 800; }
+.preview-arrow { padding: 4px 0; color: var(--subtle); font-size: .74rem; font-weight: 700; text-align: center; }
+.preview-warn { margin-top: 9px; border-radius: 8px; padding: 8px 10px; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; font-size: .76rem; font-weight: 700; line-height: 1.5; }
+.empty-month { margin: 0; padding: 34px 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .84rem; text-align: center; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:disabled:hover { border-color: var(--line); background: var(--surface); box-shadow: none; }

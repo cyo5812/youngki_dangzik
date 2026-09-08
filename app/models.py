@@ -132,6 +132,27 @@ class ImportResultOut(BaseModel):
     message: str
 
 
+class ScheduleSummary(BaseModel):
+    """일정 묶음의 요약. 교체 전후를 나란히 보여 주려고 쓴다."""
+
+    count: int = 0
+    firstDate: str | None = None
+    lastDate: str | None = None
+    holidays: int = 0
+
+
+class ImportPreviewOut(BaseModel):
+    """엑셀 미리보기 결과. 아직 DB 는 건드리지 않은 상태다.
+
+    작년 파일이나 다른 팀 파일을 실수로 올리면 형식은 멀쩡해 파싱에 성공한다.
+    그래서 **바꾸기 전에 무엇으로 바뀌는지** 먼저 보여 준다.
+    """
+
+    current: ScheduleSummary
+    incoming: ScheduleSummary
+    warnings: list[str] = []
+
+
 class RevertResultOut(BaseModel):
     """되돌리기 결과."""
 

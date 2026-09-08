@@ -49,6 +49,7 @@
       </div>
       <div id="calendar" class="calendar"></div>
       <div id="mobile-calendar" class="mobile-calendar" aria-label="모바일 월간 당직 일정"></div>
+      <p id="empty-month" class="empty-month" hidden></p>
     </section>
 
     <section id="upcoming" class="upcoming" aria-label="다가오는 당직">
@@ -115,11 +116,11 @@
         <span>엑셀 파일 <small>(최대 10MB)</small></span>
         <input id="f-file" type="file" accept=".xlsx">
       </label>
-      <p id="import-filename" class="hint" hidden></p>
+      <div id="import-preview" class="preview" hidden></div>
       <div class="modal-actions">
         <div class="spacer"></div>
         <button type="button" id="btn-import-cancel" class="btn btn-outline">취소</button>
-        <button type="button" id="btn-import-run" class="btn btn-primary">전체 교체</button>
+        <button type="button" id="btn-import-run" class="btn btn-primary" disabled>전체 교체</button>
       </div>
     </form>
   </dialog>
@@ -152,6 +153,18 @@
         <div class="spacer"></div>
         <button type="button" id="btn-key-cancel" class="btn btn-outline">취소</button>
         <button type="button" id="btn-key-save" class="btn btn-primary">확인</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm-modal" class="modal">
+    <form method="dialog">
+      <h3 id="confirm-title">확인</h3>
+      <p id="confirm-message" class="hint"></p>
+      <div class="modal-actions">
+        <div class="spacer"></div>
+        <button type="button" id="btn-confirm-no" class="btn btn-outline">취소</button>
+        <button type="button" id="btn-confirm-yes" class="btn btn-primary">계속</button>
       </div>
     </form>
   </dialog>
