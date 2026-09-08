@@ -25,11 +25,13 @@ prd.md
 design.md
 
 # 기존 GitHub Pages 버전 자산 (사내 배포 이미지에는 포함하지 않는다)
-/index.html
-/app.js
-/style.css
-/data
-/scripts
+# 선행 슬래시 없이 적는다 — 패턴에 '/' 가 없으면 최상위 파일에만 걸리므로
+# app/static/app.js 같은 하위 경로는 영향을 받지 않는다.
+index.html
+app.js
+style.css
+data
+scripts
 
 # 주의 ── corp-ca.crt 는 여기에 넣지 않는다.
 # Dockerfile 이 패키지 설치 전에 COPY corp-ca.crt 를 수행하므로,
